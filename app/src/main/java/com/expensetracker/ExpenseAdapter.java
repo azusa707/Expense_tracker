@@ -28,6 +28,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         Expense expense = expenseList.get(position);
         holder.expenseName.setText(expense.getCategory());
         holder.expenseAmount.setText(String.valueOf(expense.getAmount()));
+        holder.expenseDescription.setText(expense.getDescription());
     }
 
     @Override
@@ -36,13 +37,13 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
     }
 
     public class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
-        TextView expenseName, expenseAmount;
+        TextView expenseName, expenseAmount, expenseDescription;
 
         public ExpenseViewHolder(@NonNull View itemView) {
             super(itemView);
             expenseName = itemView.findViewById(R.id.expenseName);
             expenseAmount = itemView.findViewById(R.id.expenseAmount);
-
+            expenseDescription = itemView.findViewById(R.id.expenseDescription);
             itemView.setOnLongClickListener(this);
         }
 
