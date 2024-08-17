@@ -1,0 +1,17 @@
+[33mcommit 496a42bf5a1f5eb1a6cd5cab58af822d3e7163cd[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: azusa707 <bca210626_azusa@achsnepal.edu.np>
+Date:   Sat Aug 17 13:43:28 2024 +0545
+
+    Added card
+
+[33mcommit 58a0db1c66039fbe55b864b250b9d642e90aa126[m
+Author: azusa707 <bca210626_azusa@achsnepal.edu.np>
+Date:   Sat Aug 17 12:08:14 2024 +0545
+
+    Added swipe to delete function
+
+[33mcommit 0ab54dc8e564cbec1bb816a2d6f82fe48ef72773[m
+Author: azusa707 <bca210626_azusa@achsnepal.edu.np>
+Date:   Fri Aug 16 21:36:11 2024 +0545
+
+    Initial commit

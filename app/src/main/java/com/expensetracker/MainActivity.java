@@ -3,18 +3,22 @@ package com.expensetracker;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ExpenseAdapter adapter;
     private ArrayList<Expense> expenseList;
     private ExpenseDatabaseHelper dbHelper;
+    private PieChart pieChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerViewExpenses = findViewById(R.id.recyclerViewExpenses);
+        pieChart = findViewById(R.id.pieChart); // Initialize PieChart
         expenseList = new ArrayList<>();
 
         dbHelper = new ExpenseDatabaseHelper(this);
@@ -38,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewExpenses.setAdapter(adapter);
         recyclerViewExpenses.setLayoutManager(new LinearLayoutManager(this));
 
-        // Set up swipe-to-delete
+        updatePieChart(); // Set up PieChart with actual data
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
@@ -59,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerViewExpenses);
 
@@ -69,6 +74,40 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
     }
+
+    private void updatePieChart() {
+        List<PieEntry> entries = new ArrayList<>();
+
+        // Calculate total expenses by category
+        Map<String, Float> categoryTotals = new HashMap<>();
+        for (Expense expense : expenseList) {
+            String category = expense.getCategory();
+            float amount = expense.getAmount();
+
+            categoryTotals.put(category, categoryTotals.getOrDefault(category, 0f) + amount);
+        }
+
+        for (Map.Entry<String, Float> entry : categoryTotals.entrySet()) {
+            entries.add(new PieEntry(entry.getValue(), entry.getKey()));
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "Categories");
+        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        PieData pieData = new PieData(dataSet);
+
+        // Update PieChart
+        pieChart.setData(pieData);
+        pieChart.invalidate(); // Refresh the chart
+    }
+
+    private void loadExpensesFromDatabase() {
+        expenseList.clear();
+        List<Expense> expenses = dbHelper.getAllExpenses();
+        expenseList.addAll(expenses);
+
+        updatePieChart(); // Update PieChart with data
+    }
+
     private void deleteExpense(int position) {
         Expense expense = expenseList.get(position);
 
@@ -80,17 +119,15 @@ public class MainActivity extends AppCompatActivity {
 
         // Notify the adapter about the removed item
         adapter.notifyItemRemoved(position);
+
+        updatePieChart(); // Update PieChart after deletion
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         loadExpensesFromDatabase();
         adapter.notifyDataSetChanged();
-    }
-
-    private void loadExpensesFromDatabase() {
-        expenseList.clear();
-        List<Expense> expenses = dbHelper.getAllExpenses();
-        expenseList.addAll(expenses);
+        updatePieChart(); // Update PieChart when resuming
     }
 }

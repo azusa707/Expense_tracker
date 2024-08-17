@@ -3,9 +3,11 @@
     xmlns:cardview="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/tools"
     android:layout_margin="8dp"
-    cardview:cardCornerRadius="8dp"
-    cardview:cardElevation="4dp">
+    cardview:cardCornerRadius="25dp"
+    cardview:cardElevation="30dp"
+    app:cardElevation="40dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,23 +19,23 @@
             android:id="@+id/expenseName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:text="Expense Name" /> <!-- Ensure closing tag is correct -->
+            android:text="Expense Name" />
 
         <TextView
             android:id="@+id/expenseAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="Amount" /> <!-- Ensure closing tag is correct -->
+            android:textSize="18sp"
+            android:text="Amount" />
 
         <TextView
             android:id="@+id/expenseDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:text="Description" /> <!-- Ensure closing tag is correct -->
+            android:textSize="12sp"
+            android:text="Description" />
 
     </LinearLayout>
 

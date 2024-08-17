@@ -1,15 +1,16 @@
 package com.expensetracker;
+
 public class Expense {
     private int id;
     private String category;
     private String description;
-    private double amount;
+    private float amount;
 
     public Expense(int id, String category, String description, double amount) {
         this.id = id;
         this.category = category;
         this.description = description;
-        this.amount = amount;
+        this.amount = (float) amount; // Cast double to float
     }
 
     // Getters and Setters
@@ -37,12 +38,12 @@ public class Expense {
         this.description = description;
     }
 
-    public double getAmount() {
+    public float getAmount() {
         return amount;
     }
 
     public void setAmount(double amount) {
-        this.amount = amount;
+        this.amount = (float) amount; // Cast double to float
     }
 
     @Override
@@ -55,4 +56,3 @@ public class Expense {
                 '}';
     }
 }
-
