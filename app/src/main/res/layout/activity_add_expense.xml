@@ -1,6 +1,8 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="16dp">
 
     <EditText
@@ -14,24 +16,18 @@
         android:id="@+id/etCategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Category"
-        android:layout_below="@id/etAmount"
-        android:layout_marginTop="16dp"/>
+        android:hint="Category"/>
 
     <EditText
         android:id="@+id/etDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Description"
-        android:layout_below="@id/etCategory"
-        android:layout_marginTop="16dp"/>
+        android:hint="Description"/>
 
     <Button
         android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save"
-        android:layout_below="@id/etDescription"
-        android:layout_marginTop="32dp"
-        android:layout_centerHorizontal="true"/>
-</RelativeLayout>
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

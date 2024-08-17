@@ -48,6 +48,12 @@ public class ExpenseDatabaseHelper extends SQLiteOpenHelper {
         db.insert(TABLE_EXPENSES, null, values);
         db.close();
     }
+    public void deleteExpense(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("expenses", "id = ?", new String[]{String.valueOf(id)});
+        db.close();
+    }
+
 
     public List<Expense> getAllExpenses() {
         List<Expense> expenseList = new ArrayList<>();
