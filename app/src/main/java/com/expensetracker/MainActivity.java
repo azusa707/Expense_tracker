@@ -2,19 +2,19 @@ package com.expensetracker;
 
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.os.Build;
 import android.os.Bundle;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Expense> expenseList;
     private ExpenseDatabaseHelper dbHelper;
     private PieChart pieChart;
+    private static final int EDIT_EXPENSE_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new ExpenseDatabaseHelper(this);
         loadExpensesFromDatabase();
 
-        adapter = new ExpenseAdapter(expenseList);
+        adapter = new ExpenseAdapter(this, expenseList);
         recyclerViewExpenses.setAdapter(adapter);
         recyclerViewExpenses.setLayoutManager(new LinearLayoutManager(this));
 
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, AddExpenseActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, EDIT_EXPENSE_REQUEST_CODE);
         });
     }
 
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Update PieChart
         pieChart.setData(pieData);
-        pieChart.invalidate(); // Refresh the chart
+        pieChart.invalidate();
     }
 
     private void loadExpensesFromDatabase() {
@@ -105,7 +106,16 @@ public class MainActivity extends AppCompatActivity {
         List<Expense> expenses = dbHelper.getAllExpenses();
         expenseList.addAll(expenses);
 
-        updatePieChart(); // Update PieChart with data
+        updatePieChart();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == EDIT_EXPENSE_REQUEST_CODE && resultCode == RESULT_OK) {
+            loadExpensesFromDatabase(); // Reload expenses from database
+            adapter.notifyDataSetChanged(); // Notify adapter of data change
+        }
     }
 
     private void deleteExpense(int position) {

@@ -1,18 +1,27 @@
 package com.expensetracker;
 
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.List;
+
+import java.util.ArrayList;
 
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseViewHolder> {
 
-    private List<Expense> expenseList;
+    private ArrayList<Expense> expenseList;
+    private Context context;
 
-    public ExpenseAdapter(List<Expense> expenseList) {
+    // Constructor with context
+    public ExpenseAdapter(Context context, ArrayList<Expense> expenseList){
+        this.context = context;
         this.expenseList = expenseList;
     }
 
@@ -26,9 +35,20 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
     @Override
     public void onBindViewHolder(@NonNull ExpenseViewHolder holder, int position) {
         Expense expense = expenseList.get(position);
-        holder.expenseName.setText(expense.getCategory());
-        holder.expenseAmount.setText(String.valueOf(expense.getAmount()));
-        holder.expenseDescription.setText(expense.getDescription());
+
+        holder.expenseNameTextView.setText(expense.getCategory());
+        holder.expenseAmountTextView.setText(String.format("$%.2f", expense.getAmount()));
+        holder.expenseDescriptionTextView.setText(expense.getDescription());
+
+        holder.btnEdit.setOnClickListener(v -> {
+            if (context != null) {
+                Intent intent = new Intent(context, EditExpenseActivity.class);
+                intent.putExtra("EXPENSE_ID", expense.getId()); // Pass the expense ID
+                context.startActivity(intent);
+            } else {
+                Log.e("ExpenseAdapter", "Context is null");
+            }
+        });
     }
 
     @Override
@@ -36,33 +56,20 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseV
         return expenseList.size();
     }
 
-    public class ExpenseViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
-        TextView expenseName, expenseAmount, expenseDescription;
+
+
+    public static class ExpenseViewHolder extends RecyclerView.ViewHolder {
+        TextView expenseNameTextView;
+        TextView expenseAmountTextView;
+        TextView expenseDescriptionTextView;
+        Button btnEdit;
 
         public ExpenseViewHolder(@NonNull View itemView) {
             super(itemView);
-            expenseName = itemView.findViewById(R.id.expenseName);
-            expenseAmount = itemView.findViewById(R.id.expenseAmount);
-            expenseDescription = itemView.findViewById(R.id.expenseDescription);
-            itemView.setOnLongClickListener(this);
+            expenseNameTextView = itemView.findViewById(R.id.expenseName);
+            expenseAmountTextView = itemView.findViewById(R.id.expenseAmount);
+            expenseDescriptionTextView = itemView.findViewById(R.id.expenseDescription);
+            btnEdit = itemView.findViewById(R.id.btnEdit);
         }
-
-        @Override
-        public boolean onLongClick(View view) {
-            int position = getAdapterPosition();
-            view.showContextMenu();
-            return true;
-        }
-    }
-
-    public void deleteExpense(int position) {
-        expenseList.remove(position);
-        notifyItemRemoved(position);
-    }
-
-    public void editExpense(int position, Expense updatedExpense) {
-        expenseList.set(position, updatedExpense);
-        notifyItemChanged(position);
     }
 }
-
